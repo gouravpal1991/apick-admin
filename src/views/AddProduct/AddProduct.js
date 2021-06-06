@@ -16,6 +16,7 @@ import FormControl from "@material-ui/core/FormControl";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import InputBase from "@material-ui/core/InputBase";
 // import avatar from "assets/img/faces/marc.jpg";
+// import ImageUpload from 'components/CustomUpload/ImageUpload.js';
 
 const styles = {
   cardCategoryWhite: {
@@ -34,6 +35,12 @@ const styles = {
     marginBottom: "3px",
     textDecoration: "none",
   },
+  prodImage:{
+    width: "100px",
+    width: "100px",
+    borderRadius: "3px",
+    border: "1px solid"
+  }
 };
 
 const useStyles = makeStyles(styles);
@@ -72,11 +79,26 @@ const BootstrapInput = withStyles((theme) => ({
   },
 }))(InputBase);
 export default function AddProduct() {
+
   const classes = useStyles();
   const [age, setAge] = React.useState("");
+  const [productImageUrl, setProductImageUrl] = React.useState({});
   const handleChange = (event) => {
     setAge(event.target.value);
   };
+  // On file select (from the pop up)
+  const onImageChange = event => {
+    // Update the state
+    setProductImageUrl();
+    var oFReader = new FileReader();
+    oFReader.readAsDataURL(event.target.files[0]);
+
+    oFReader.onload = function (oFREvent) {
+      document.getElementById("uploadPreview").src = oFREvent.target.result;
+    };
+    console.log("productImageUrl", productImageUrl);
+  };
+
   return (
     <div>
       <GridContainer>
@@ -88,7 +110,16 @@ export default function AddProduct() {
             </CardHeader>
             <CardBody>
               <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
+                <GridItem xs={12} sm={12} md={3}>
+                  <FormControl className={classes.margin}>
+                    <div>
+                      <input type='file' onChange={onImageChange} />
+                      <br /><img id="uploadPreview" className={classes.prodImage} src="#" />
+                    </div>
+
+                  </FormControl>
+                </GridItem>
+                <GridItem xs={12} sm={12} md={3}>
                   <FormControl className={classes.margin}>
                     <InputLabel>Category</InputLabel>
                     <NativeSelect
@@ -110,7 +141,7 @@ export default function AddProduct() {
                     </NativeSelect>
                   </FormControl>
                 </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
+                <GridItem xs={12} sm={12} md={3}>
                   <CustomInput
                     labelText="Title"
                     id="product-title"
@@ -120,7 +151,7 @@ export default function AddProduct() {
                     placeholder="sdafsadf"
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
+                <GridItem xs={12} sm={12} md={3}>
                   <CustomInput
                     labelText="Meta Title"
                     id="meta-title"
